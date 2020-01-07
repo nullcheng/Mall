@@ -10,7 +10,7 @@
 	}
 </script>
 
-<style>
+<style scoped>
 	#tab-bar{
 		display: flex;
 		text-align: center;

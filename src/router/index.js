@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-const Home = () => import ('../views/home/Home.vue')
-const Category = () => import('../views/category/Category.vue')
-const Profile = () => import('../views/profile/Profile.vue')
-const Shopcart = () => import('../views/shopcart/Shopcart.vue')
+const Home = () => import ('views/home/Home.vue')
+const Category = () => import('views/category/Category.vue')
+const Profile = () => import('views/profile/Profile.vue')
+const Shopcart = () => import('views/shopcart/Shopcart.vue')
+const Detail = () =>import('views/detail/Detail.vue')
 
 Vue.use(VueRouter)
 
@@ -39,7 +40,14 @@ const routes = [
 		component: Profile,
 		meta:{
 			title:'我的'
-		}
+		},
+	},
+	{
+		path:'/detail/:iid',
+		component: Detail,
+		meta:{
+			title:'详情'
+		},
 	}
 ]
 
