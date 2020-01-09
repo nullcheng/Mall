@@ -1,8 +1,8 @@
 <template>
 	<div class="goods-item" @click="itemClick">
-		<img :src="goodsItem.show.img" alt="" @load="imageLoad">
+		<img :src="showImage" alt="" @load="imageLoad">
 		<div class="goods-info">
-			<p>{{goodsItem.title}}</p>
+			<p>{{goodsItem.title}}111</p>
 			<span class="price">{{goodsItem.price}}</span>
 			<span class="collect">{{goodsItem.cfav}}</span>
 		</div>
@@ -20,12 +20,18 @@
 				}
 			}
 		},
+		computed:{
+			showImage(){
+				return this.goodsItem.image || this.goodsItem.show.img 
+			}
+		},
 		methods:{
 			imageLoad (){
 				this.$bus.$emit('itemImgeLoad')
 			},
 			itemClick(){
 				this.$router.push('/detail/' + this.goodsItem.iid)
+				// return this.$router.push('/detail/' + this.goodsItem.iid) || this.$router.push('/detail/' + this.goodsItem.shop_id)
 			}
 		}
 	}

@@ -30,10 +30,10 @@
 	import TabControl from 'components/content/tabControl/TabControl.vue'
 	import GoodsList from 'components/content/goods/GoodsList.vue'
 	import Scroll from 'components/common/scroll/Scroll.vue'
-	import BackTop from 'components/content/backTop/BackTop.vue'
 	
 	import {getHomeMultidata,getHomeGoods} from "network/home.js"
 	import {debounce} from 'common/utils.js'
+	import {itemListenerMixin,backTopMixin} from "common/mixin.js"
 	
 	export default {
 		name: 'Home',
@@ -45,7 +45,6 @@
 			TabControl,
 			GoodsList,
 			Scroll,
-			BackTop
 		},
 		data() {
 			return {
@@ -57,10 +56,9 @@
 					'sell':{page:0,list:[]},
 				},
 				currentType:'pop',
-				isShowBackTop:false,
 				tabOffsetTop:0,
 				isTabFixed:false,
-				saveY:0
+				saveY:0,
 			}
 		},
 		computed:{
@@ -77,8 +75,10 @@
 			
 		},
 		deactivated() {
+			//1,保存Y值
 			this.saveY = this.$refs.scroll.getScrollY()
-			
+			//2，取消全局事件的监听
+			this.$bus.$off('itemImgeLoad',this.itemImgListener)
 		},
 		created() {
 			//1，请求多个数据
@@ -90,16 +90,23 @@
 			this.getHomeGoods('sell')
 			
 		},
+		
 		mounted() {
-			//监听item中图片加载完成
-			const refresh = debounce(this.$refs.scroll.refresh,50)
-			this.$bus.$on('itemImgeLoad',()=>{
-				refresh()
-			})
+			// //监听item中图片加载完成
+			// const refresh = debounce(this.$refs.scroll.refresh,50)
 			
-			//吸顶效果赋值
+			// //对监听的事件保存
+			// this.itemImgListener = ()=>{
+			// 	refresh()
+			// }
+			// this.$bus.$on('itemImgeLoad',()=>{
+			// 	refresh()
+			// })
+			
+			// //吸顶效果赋值
 			
 		},
+		mixins:[itemListenerMixin,backTopMixin],
 		methods:{
 			//防抖函数
 			debounce(func,delay){
@@ -125,11 +132,9 @@
 					this.currentType = 'sell'
 					break
 				}
+				
 				this.$refs.tabControl1.cur = index;
 				this.$refs.tabControl2.cur = index;
-			},
-			backClick(){
-				this.$refs.scroll.scrollTo(0,0)
 			},
 			contentScroll(position){
 				//1,判断backTop是否显示
